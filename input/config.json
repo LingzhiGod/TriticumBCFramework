@@ -1,0 +1,71 @@
+{
+  "global": {
+    "seed": 42,
+    "parallel": false,
+    "overwrite": false,
+    "ensemble_mode": "stacking",
+    "auto_weight_tune": true,
+    "log_level": "INFO",
+    "timestamp_format": "%Y%m%d_%H%M%S"
+  },
+
+  "tuning": {
+    "enable_lgb": true,
+    "enable_xgb": true,
+    "enable_cat": false,
+    "n_trials": 50,
+    "continue_previous": true
+  },
+
+  "search_space": {
+    "lgb": {
+      "num_leaves": [31, 255],
+      "max_depth": [-1, 12],
+      "feature_fraction": [0.6, 1.0],
+      "bagging_fraction": [0.6, 1.0],
+      "lambda_l1": [0.0, 5.0],
+      "lambda_l2": [0.0, 5.0],
+      "min_data_in_leaf": [10, 200],
+      "learning_rate": [0.01, 0.1]
+    },
+    "xgb": {
+      "max_depth": [4, 10],
+      "colsample_bytree": [0.6, 1.0],
+      "subsample": [0.6, 1.0],
+      "eta": [0.01, 0.1],
+      "lambda": [0.0, 5.0],
+      "alpha": [0.0, 5.0]
+    },
+    "cat": {
+      "depth": [4, 10],
+      "learning_rate": [0.01, 0.1],
+      "l2_leaf_reg": [1, 10],
+      "bagging_temperature": [0.5, 3.0]
+    }
+  },
+
+  "ensemble": {
+    "mode": "weighted",
+    "default_weights": { "lgb": 0.5, "xgb": 0.3, "cat": 0.2 },
+    "meta_model": "logistic",
+    "auto_weight_tune": true
+  },
+
+  "threshold_search": {
+    "start": 0.05,
+    "end": 0.95,
+    "step": 0.01,
+    "auto_adjust": true
+  },
+
+  "evaluation": {
+    "metric_formula": "0.7*acc + 0.3*f1",
+    "primary_metric": "f1"
+  },
+
+  "feature_engineering": {
+    "use_nonlinear": true,
+    "save_feature_list": true,
+    "registry": ["telecom_features", "nonlinear_features"]
+  }
+}
