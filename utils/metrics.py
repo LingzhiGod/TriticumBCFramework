@@ -10,6 +10,8 @@ from sklearn.metrics import (
 from typing import Dict, Optional
 import re
 
+from utils.logger import DummyLogger
+
 
 def evaluate_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
     """
@@ -67,7 +69,7 @@ def format_metrics(metrics: Dict[str, float], score: Optional[float] = None) -> 
 def evaluate_with_formula(y_true: np.ndarray,
                           y_pred: np.ndarray,
                           formula: str = "0.7*acc + 0.3*f1",
-                          logger=None) -> Dict[str, float]:
+                          logger=DummyLogger()) -> Dict[str, float]:
     """
     综合评测函数：计算基础指标 + 综合得分。
     参数:

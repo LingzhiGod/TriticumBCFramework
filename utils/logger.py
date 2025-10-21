@@ -23,10 +23,10 @@ class LoggerManager:
         if self.logger:
             return self.logger
 
-        log_level = (self.cfg.get("global", {}).get("log_level", "INFO")
-                     if self.cfg else "INFO")
-        ts_format = (self.cfg.get("global", {}).get("timestamp_format", "%Y%m%d_%H%M%S")
-                     if self.cfg else "%Y%m%d_%H%M%S")
+        cfg = self.cfg
+
+        log_level = cfg["global"]["log_level"]
+        ts_format = cfg["global"]["timestamp_format"]
 
         timestamp = datetime.now().strftime(ts_format)
         log_file = os.path.join(self.log_dir, f"tbcf_{timestamp}.log")
@@ -65,3 +65,15 @@ class LoggerManager:
 def setup_logger(cfg=None, log_dir="output/logs"):
     """初始化全局 logger"""
     return LoggerManager(cfg, log_dir).setup()
+
+class DummyLogger:
+    """空日志器，所有方法均为空实现"""
+    def debug(self, *args, **kwargs): pass
+    def info(self, *args, **kwargs): pass
+    def warning(self, *args, **kwargs): pass
+    def error(self, *args, **kwargs): pass
+    def exception(self, *args, **kwargs): pass
+
+def ensure_logger(logger=DummyLogger()):
+    """确保返回一个可用的 logger 实例（为空则返回 DummyLogger）"""
+    return logger if logger is not None else DummyLogger()

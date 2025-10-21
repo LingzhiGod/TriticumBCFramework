@@ -5,6 +5,8 @@ Threshold Search Layer
 
 import numpy as np
 from typing import Tuple, Dict, Optional
+
+from .logger import DummyLogger
 from .metrics import evaluate_metrics, compute_score, format_metrics
 
 
@@ -16,7 +18,7 @@ def find_best_threshold(
     end: float = 0.95,
     step: float = 0.01,
     auto_adjust: bool = True,
-    logger=None
+    logger=DummyLogger()
 ) -> Tuple[float, float, Dict[str, float]]:
     """
     搜索最优分类阈值以最大化综合评分。
@@ -74,7 +76,7 @@ def threshold_report(
     y_true: np.ndarray,
     y_prob: np.ndarray,
     formula: str = "0.7*acc + 0.3*f1",
-    logger=None
+    logger=DummyLogger()
 ) -> Dict[str, float]:
     """
     综合阈值优化与评测接口（用于 run.py）
