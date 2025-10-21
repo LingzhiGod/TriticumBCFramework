@@ -40,7 +40,7 @@ def main():
             "timestamp_format": "%Y%m%d_%H%M%S"
         },
         "feature_engineering": {
-            "registry": ["date_features"],
+            "registry": ["date_features", "my_feature"],
             "params": {
                 "date_features": {"date_col": "registration_date", "reference_date": "2020-12-31"}
             },

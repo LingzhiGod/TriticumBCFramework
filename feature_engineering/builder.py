@@ -21,6 +21,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
 from .feature_registry import REGISTRY, list_features
+from .feature_registry import initialize_feature_registry
 
 
 # -------------------------------
@@ -150,6 +151,7 @@ def build_features(
       - shared_state: 训练阶段产生的状态（编码器/分桶/统计量等），用于推理阶段复用
     返回：df, used_cols, num_cols, cat_cols, shared_state
     """
+    initialize_feature_registry(logger)
     fe_cfg = fe_cfg or {}
     registry = fe_cfg.get("registry", [])
     params_all = fe_cfg.get("params", {}) or {}
