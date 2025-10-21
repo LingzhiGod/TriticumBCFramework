@@ -52,8 +52,8 @@ def apply_date_features(df, mode, params=None, shared_state=None, logger=DummyLo
     df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
 
     # 衍生特征
-    df["reg_year"] = df[date_col].dt.year
-    df["reg_month"] = df[date_col].dt.month
+    df["reg_year_cat"] = df[date_col].dt.year
+    df["reg_month_cat"] = df[date_col].dt.month
     df["reg_days_since_ref"] = (df[date_col] - ref_date).dt.days
 
     if logger:

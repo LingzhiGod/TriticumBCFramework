@@ -66,6 +66,7 @@
   "feature_engineering": {
     "use_nonlinear": true,
     "save_feature_list": true,
-    "registry": ["telecom_features", "nonlinear_features"]
+    "registry": ["telecom_features", "nonlinear_features"],
+    "ignore_cols": ["registration_date","user_id", "is_positive"]
   }
 }

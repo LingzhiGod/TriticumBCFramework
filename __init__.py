@@ -35,6 +35,7 @@ except Exception as e:
 
 try:
     from .feature_engineering.builder import build_features
+    from .feature_engineering.core import apply_date_features
 except Exception as e:
     print(f"[TBCF] Warning: feature_engineering modules not fully loaded ({e})")
 
@@ -43,6 +44,7 @@ __all__ = [
     "setup_logger",
     "DummyLogger",
     "build_features",
+    "apply_date_features",
 ]
 
 # ------------------------------------

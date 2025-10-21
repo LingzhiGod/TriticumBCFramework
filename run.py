@@ -46,7 +46,7 @@ def main():
             },
             "output_mode": "typed",
             "save_feature_list": True,
-            "ignore_cols": ["user_id", "is_positive"]
+            "ignore_cols": ["registration_date","user_id", "is_positive"]
         }
     }
 

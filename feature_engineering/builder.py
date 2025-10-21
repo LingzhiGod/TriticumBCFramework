@@ -47,8 +47,13 @@ def detect_feature_types(df: pd.DataFrame, ignore: Optional[List[str]] = None, l
     for c in df.columns:
         if c in ignore:
             continue
+        cname = c.lower()
         dtype = str(df[c].dtype)
-        if dtype.startswith(("int", "float")):
+        if cname.endswith("_cat") or cname.endswith("_bin") or cname.endswith("_le"):
+            cat_cols.append(c)
+        elif cname.endswith("_num"):
+            num_cols.append(c)
+        elif dtype.startswith(("int", "float")):
             num_cols.append(c)
         else:
             cat_cols.append(c)
@@ -62,6 +67,7 @@ def _encode_categoricals(
     mode: str,
     shared_state: Optional[Dict] = None,
     include_cols: Optional[List[str]] = None,
+    ignore_cols: Optional[List[str]] = None,
     logger=DummyLogger()
 ) -> Tuple[pd.DataFrame, Dict]:
     """
@@ -84,6 +90,8 @@ def _encode_categoricals(
         cand = list(include_cols)
 
     for col in cand:
+        if col in ignore_cols:
+            continue
         series = df[col].astype(str).fillna("nan")
         if mode == "train":
             le = LabelEncoder()
@@ -148,7 +156,7 @@ def build_features(
     external_modules = fe_cfg.get("external_modules", []) or []
     output_mode = fe_cfg.get("output_mode", "typed")  # "typed" 或 "raw"
     save_feature_list = fe_cfg.get("save_feature_list", True)
-    ignore_cols = fe_cfg.get("ignore_cols", ["user_id", "is_positive"])
+    ignore_cols = fe_cfg.get("ignore_cols", [])
 
     if shared_state is None:
         shared_state = {}
@@ -193,7 +201,7 @@ def build_features(
         # 先检测类型，再对类别列进行统一编码
         num_cols, cat_cols = detect_feature_types(df, ignore_cols, logger)
         # 对原生类别列进行统一编码，生成 *_le
-        df, shared_state = _encode_categoricals(df, mode, shared_state, include_cols=cat_cols, logger=logger)
+        df, shared_state = _encode_categoricals(df, mode, shared_state, include_cols=cat_cols, ignore_cols=ignore_cols, logger=logger)
         # 刷新类型信息：将编码列视为 categorical used
         num_cols, cat_cols = detect_feature_types(df, ignore_cols, logger)
         # cat 列只保留 *_le 作为模型输入
